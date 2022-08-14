@@ -1,11 +1,12 @@
 import { useState } from "react";
 
 import "./App.css";
-// import Team from "./Team";
+import colorSelect from "./colorGenerator";
 
 function App() {
   const [userInput, setUserInput] = useState("");
   const [teamList, setTeamList] = useState([]);
+  // const [winnersCircle, setWinnersCircle] = useState([]);
 
   const handleInput = (event) => {
     setUserInput(event.target.value);
@@ -13,7 +14,13 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setTeamList([...teamList, userInput]);
+    setTeamList([
+      ...teamList,
+      {
+        name: userInput,
+        color: `rgb(${colorSelect()}, ${colorSelect()}, ${colorSelect()})`,
+      },
+    ]);
     setUserInput("");
   };
 
@@ -38,8 +45,16 @@ function App() {
       <div id="outputs">
         <div id="field">
           <div id="football-field">
-            <div className="endzone">
-              <h1>TOUCHDOWN</h1>
+            <div className="startzone">
+              {teamList.length
+                ? teamList.map((team, index) => {
+                    return (
+                      <p style={{ color: team.color }} key={index}>
+                        {team.name}
+                      </p>
+                    );
+                  })
+                : "No teams have been added to the league yet. Add teams above!"}
             </div>
             <div className="main-field"></div>
             <div className="endzone">
@@ -48,15 +63,7 @@ function App() {
           </div>
           <div id="runner">Test Runner</div>
         </div>
-        <div id="scoreboard">
-          {teamList.length
-            ? teamList.map((team, index) => {
-                return (
-                  <p>This is a placeholder until I think of something better</p>
-                );
-              })
-            : "No teams have been added to the league yet. Add teams above!"}
-        </div>
+        <div id="scoreboard"></div>
       </div>
     </div>
   );
