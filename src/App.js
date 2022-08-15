@@ -9,6 +9,8 @@ function App() {
   ];
   const [userInput, setUserInput] = useState("");
   const [teamList, setTeamList] = useState([]);
+  const [gameMode, setGameMode] = useState("initial");
+  const [selectionFinished, setSelectionFinished] = useState(false);
   // const [winnersCircle, setWinnersCircle] = useState([]);
 
   const handleInput = (event) => {
@@ -31,6 +33,16 @@ function App() {
   const handleReset = () => {
     setTeamList([]);
     setUserInput("");
+    setGameMode("initial");
+    setSelectionFinished(false);
+  };
+
+  const toggleMode = () => {
+    gameMode === "initial"
+      ? setGameMode("selection")
+      : gameMode === "selection" && !selectionFinished
+      ? setGameMode("initial")
+      : setSelectionFinished(true);
   };
 
   return (
@@ -40,11 +52,27 @@ function App() {
         <form onSubmit={handleSubmit}>
           <label>
             Team Name:
-            <input type="text" value={userInput} onChange={handleInput} />
+            <input
+              className="input-field"
+              type="text"
+              value={userInput}
+              onChange={handleInput}
+            />
           </label>
           <input type="submit" value="Add Team" />
         </form>
-        <button onClick={handleReset}>Reset League</button>
+        <div className="buttons">
+          <button onClick={toggleMode} style={{ backgroundColor: "green" }}>
+            {gameMode === "initial" ? "Begin Selection!" : "Pause Selection"}
+          </button>
+          <button
+            onClick={handleReset}
+            style={{ backgroundColor: "red" }}
+            disabled={gameMode === "initial" ? false : true}
+          >
+            Reset League
+          </button>
+        </div>
       </div>
       <div id="outputs">
         <div id="field">
