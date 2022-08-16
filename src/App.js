@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import "./App.css";
 import colorSelect from "./colorGenerator";
@@ -11,7 +11,11 @@ function App() {
   const [teamList, setTeamList] = useState([]);
   const [gameMode, setGameMode] = useState("initial");
   const [selectionFinished, setSelectionFinished] = useState(false);
-  // const [winnersCircle, setWinnersCircle] = useState([]);
+  const [winnersCircle, setWinnersCircle] = useState([]);
+
+  if (teamList.length === 0 && gameMode === "selection") {
+    setSelectionFinished(true);
+  }
 
   const handleInput = (event) => {
     setUserInput(event.target.value);
@@ -35,6 +39,7 @@ function App() {
     setUserInput("");
     setGameMode("initial");
     setSelectionFinished(false);
+    setWinnersCircle([]);
   };
 
   const toggleMode = () => {
@@ -44,6 +49,24 @@ function App() {
       ? setGameMode("initial")
       : setSelectionFinished(true);
   };
+
+  useEffect(() => {
+    if (gameMode === "selection") {
+      setInterval(() => {
+        for (let i = 0; i < teamList.length; i++) {
+          if (teamList[i].points >= 100) {
+            continue;
+          }
+
+          teamList[i].points += Math.floor(Math.random() * 10);
+
+          if (teamList[i].points >= 100) {
+            setWinnersCircle([...winnersCircle, teamList[i]]);
+          }
+        }
+      }, 2000);
+    }
+  }, [gameMode, winnersCircle, teamList]);
 
   return (
     <div id="site">
@@ -114,6 +137,15 @@ function App() {
         </div>
         <div id="scoreboard">
           <h1>Draft Order:</h1>
+          <ol className="winners-circle">
+            {winnersCircle.length ? (
+              winnersCircle.map((winner) => {
+                return <li>{winner.name}</li>;
+              })
+            ) : (
+              <div></div>
+            )}
+          </ol>
         </div>
       </div>
     </div>

@@ -45,6 +45,17 @@
   width: 20%;
   height: 100%;
   background-color: grey;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.winners-circle {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
 }
 
 #football-field {
