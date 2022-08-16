@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import "./App.css";
 import colorSelect from "./colorGenerator";
@@ -11,12 +11,15 @@ function App() {
   const [teamList, setTeamList] = useState([]);
   const [gameMode, setGameMode] = useState("initial");
   const [selectionFinished, setSelectionFinished] = useState(false);
-  const [winnersCircle, setWinnersCircle] = useState([]);
+  // const [winnersCircle, setWinnersCircle] = useState([]);
 
-  if (teamList.length === winnersCircle.length && gameMode === "selection") {
-    setSelectionFinished(true);
-    setGameMode("initial");
-  }
+  const selectionRef = useRef(null);
+  const winnersRef = useRef([]);
+
+  // if (teamList.length === winnersCircle.length && gameMode === "selection") {
+  //   setSelectionFinished(true);
+  //   setGameMode("initial");
+  // }
 
   const handleInput = (event) => {
     setUserInput(event.target.value);
@@ -40,7 +43,7 @@ function App() {
     setUserInput("");
     setGameMode("initial");
     setSelectionFinished(false);
-    setWinnersCircle([]);
+    winnersRef.current = [];
   };
 
   const toggleMode = () => {
@@ -53,7 +56,7 @@ function App() {
 
   useEffect(() => {
     if (gameMode === "selection") {
-      setInterval(() => {
+      selectionRef.current = setInterval(() => {
         setTeamList((teamList) => {
           return teamList.map((team) => {
             if (team.points >= 100) {
@@ -62,16 +65,20 @@ function App() {
               team.points += Math.floor(Math.random() * 10);
             }
 
-            if (team.points >= 100) {
-              setWinnersCircle([...winnersCircle, team.name]);
+            if (team.points >= 100 && !winnersRef.current.includes(team.name)) {
+              winnersRef.current.push(team.name);
             }
 
             return { name: team.name, color: team.color, points: team.points };
           });
         });
       }, 2000);
+    } else {
+      clearInterval(selectionRef.current);
     }
   }, [gameMode]);
+
+  // console.log(winnersRef.current);
 
   return (
     <div id="site">
@@ -143,9 +150,9 @@ function App() {
         <div id="scoreboard">
           <h1>Draft Order:</h1>
           <ol className="winners-circle">
-            {winnersCircle.length ? (
-              winnersCircle.map((winner) => {
-                return <li>{winner.name}</li>;
+            {winnersRef.current.length ? (
+              winnersRef.current.map((winner) => {
+                return <li>{winner}</li>;
               })
             ) : (
               <div></div>
