@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: visibility 1s opacity 4s ease-in; 
 }
 
 .final-results {

@@ -52,12 +52,14 @@ function App() {
     teamList.length === winnersRef.current.length &&
     gameMode === "selection"
   ) {
-    setSelectionFinished(true);
-    toggleMode();
-    teamList.map((team) => {
-      team.points = 0;
-      return { name: team.name, color: team.color, points: team.points };
-    });
+    setTimeout(() => {
+      setSelectionFinished(true);
+      toggleMode();
+      teamList.map((team) => {
+        team.points = 0;
+        return { name: team.name, color: team.color, points: team.points };
+      });
+    }, 1500);
   }
 
   useEffect(() => {
@@ -88,7 +90,14 @@ function App() {
 
   return (
     <div id="site">
-      <div id="modal" style={selectionFinished ? null : { display: "none" }}>
+      <div
+        id="modal"
+        style={
+          selectionFinished
+            ? { visibility: "visible", opacity: 1 }
+            : { visibility: "hidden", opacity: 0 }
+        }
+      >
         <div className="final-results">
           <h1>Final Order for the 2022 Fantasy Football Draft!</h1>
           <ol className="winners-circle">
