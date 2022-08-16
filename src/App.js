@@ -11,15 +11,9 @@ function App() {
   const [teamList, setTeamList] = useState([]);
   const [gameMode, setGameMode] = useState("initial");
   const [selectionFinished, setSelectionFinished] = useState(false);
-  // const [winnersCircle, setWinnersCircle] = useState([]);
 
   const selectionRef = useRef(null);
   const winnersRef = useRef([]);
-
-  // if (teamList.length === winnersCircle.length && gameMode === "selection") {
-  //   setSelectionFinished(true);
-  //   setGameMode("initial");
-  // }
 
   const handleInput = (event) => {
     setUserInput(event.target.value);
@@ -42,26 +36,39 @@ function App() {
     setTeamList([]);
     setUserInput("");
     setGameMode("initial");
-    setSelectionFinished(false);
     winnersRef.current = [];
   };
 
   const toggleMode = () => {
-    gameMode === "initial"
-      ? setGameMode("selection")
-      : gameMode === "selection" && !selectionFinished
-      ? setGameMode("initial")
-      : setSelectionFinished(true);
+    if (gameMode === "initial") {
+      setGameMode("selection");
+      winnersRef.current = [];
+    } else {
+      setGameMode("initial");
+    }
   };
 
+  if (
+    teamList.length === winnersRef.current.length &&
+    gameMode === "selection"
+  ) {
+    setSelectionFinished(true);
+    toggleMode();
+    teamList.map((team) => {
+      team.points = 0;
+      return { name: team.name, color: team.color, points: team.points };
+    });
+  }
+
   useEffect(() => {
-    if (gameMode === "selection") {
+    if (
+      gameMode === "selection" &&
+      winnersRef.current.length !== teamList.length
+    ) {
       selectionRef.current = setInterval(() => {
         setTeamList((teamList) => {
           return teamList.map((team) => {
-            if (team.points >= 100) {
-              team.points = 100;
-            } else {
+            if (team.points <= 100) {
               team.points += Math.floor(Math.random() * 10);
             }
 
@@ -76,12 +83,32 @@ function App() {
     } else {
       clearInterval(selectionRef.current);
     }
+    //eslint-disable-next-line
   }, [gameMode]);
-
-  // console.log(winnersRef.current);
 
   return (
     <div id="site">
+      <div id="modal" style={selectionFinished ? null : { display: "none" }}>
+        <div className="final-results">
+          <h1>Final Order for the 2022 Fantasy Football Draft!</h1>
+          <ol className="winners-circle">
+            {winnersRef.current.length ? (
+              winnersRef.current.map((winner) => {
+                return <li>{winner}</li>;
+              })
+            ) : (
+              <div></div>
+            )}
+          </ol>
+          <button
+            onClick={() => {
+              setSelectionFinished(false);
+            }}
+          >
+            Select Again
+          </button>
+        </div>
+      </div>
       <div id="inputs">
         <h3>Enter your league's teams here:</h3>
         <form onSubmit={handleSubmit}>
@@ -145,7 +172,6 @@ function App() {
               <h1>TOUCHDOWN</h1>
             </div>
           </div>
-          <div id="runner">Test Runner</div>
         </div>
         <div id="scoreboard">
           <h1>Draft Order:</h1>
