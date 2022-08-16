@@ -13,8 +13,9 @@ function App() {
   const [selectionFinished, setSelectionFinished] = useState(false);
   const [winnersCircle, setWinnersCircle] = useState([]);
 
-  if (teamList.length === 0 && gameMode === "selection") {
+  if (teamList.length === winnersCircle.length && gameMode === "selection") {
     setSelectionFinished(true);
+    setGameMode("initial");
   }
 
   const handleInput = (event) => {
@@ -53,20 +54,24 @@ function App() {
   useEffect(() => {
     if (gameMode === "selection") {
       setInterval(() => {
-        for (let i = 0; i < teamList.length; i++) {
-          if (teamList[i].points >= 100) {
-            continue;
-          }
+        setTeamList((teamList) => {
+          return teamList.map((team) => {
+            if (team.points >= 100) {
+              team.points = 100;
+            } else {
+              team.points += Math.floor(Math.random() * 10);
+            }
 
-          teamList[i].points += Math.floor(Math.random() * 10);
+            if (team.points >= 100) {
+              setWinnersCircle([...winnersCircle, team.name]);
+            }
 
-          if (teamList[i].points >= 100) {
-            setWinnersCircle([...winnersCircle, teamList[i]]);
-          }
-        }
+            return { name: team.name, color: team.color, points: team.points };
+          });
+        });
       }, 2000);
     }
-  }, [gameMode, winnersCircle, teamList]);
+  }, [gameMode]);
 
   return (
     <div id="site">
