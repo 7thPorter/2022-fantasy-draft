@@ -131,15 +131,20 @@ function App() {
               onChange={handleInput}
             />
           </label>
-          <input type="submit" value="Add Team" />
+          <input className="submit-button" type="submit" value="Add Team" />
         </form>
         <div className="buttons">
-          <button onClick={toggleMode} style={{ backgroundColor: "green" }}>
+          <button
+            className="button-green"
+            onClick={toggleMode}
+            // style={{ backgroundColor: "green" }}
+          >
             {gameMode === "initial" ? "Begin Selection!" : "Pause Selection"}
           </button>
           <button
+            className="button-red"
             onClick={handleReset}
-            style={{ backgroundColor: "red" }}
+            // style={{ backgroundColor: "red" }}
             disabled={gameMode === "initial" ? false : true}
           >
             Reset League
