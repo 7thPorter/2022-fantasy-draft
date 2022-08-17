@@ -37,7 +37,7 @@
   font-size: 2.5rem;
 }
 .final-results > ol {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 #inputs {
@@ -104,7 +104,6 @@
 form {
   margin-top: -30px;
   width: 100%;
-  /* height: 100%; */
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -386,7 +385,3 @@ form {
   align-items: center;
 
 }
-
-/* .scoreboard {
-
-} */
