@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 import "./App.css";
 import colorSelect from "./colorGenerator";
+import nflMath from "./math";
 
 function App() {
   const fieldNumbers = [
@@ -71,7 +72,7 @@ function App() {
         setTeamList((teamList) => {
           return teamList.map((team) => {
             if (team.points <= 100) {
-              team.points += Math.floor(Math.random() * 10);
+              team.points += nflMath();
             }
 
             if (team.points >= 100 && !winnersRef.current.includes(team.name)) {
